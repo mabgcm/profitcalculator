@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Giriş Sayfası</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #121212;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .login-container {
+      background-color: #1f1f1f;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.6);
+      width: 300px;
+      text-align: center;
+    }
+
+    .login-container h2 {
+      color: #ffffff;
+      margin-bottom: 30px;
+    }
+
+    .login-btn {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      margin: 12px 0;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .btn-primary {
+      background-color: #00ffae;
+      color: #000;
+    }
+
+    .btn-primary:hover {
+      background-color: #00e09c;
+    }
+
+    .btn-secondary {
+      background-color: #3a3a3a;
+      color: #fff;
+    }
+
+    .btn-secondary:hover {
+      background-color: #555;
+    }
+
+    .btn-guest {
+      background-color: transparent;
+      color: #aaa;
+      border: 1px solid #444;
+    }
+
+    .btn-guest:hover {
+      color: #fff;
+      border-color: #00ffae;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h2>Profit Calculator</h2>
+    <a class="login-btn btn-primary" href="targetprice.html">Target Price</a>
+    <a class="login-btn btn-primary" href="roi.html">ROI</a>
+    <a class="login-btn btn-primary" href="tpsproi.html">TP / SL</a>
+  </div>
+</body>
+</html>

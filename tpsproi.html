@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>TP/SL ROI Paneli</title>
+  <style>
+    body {
+      background-color: #0d0d0d;
+      font-family: Arial, sans-serif;
+      color: #fff;
+      padding: 20px;
+    }
+    .panel {
+      background-color: #1c1c1c;
+      max-width: 500px;
+      margin: auto;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
+    h2 {
+      color: #00ffae;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .row {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      color: #aaa;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+      background-color: #333;
+      border: 1px solid #444;
+      color: #fff;
+      border-radius: 4px;
+    }
+    .btn {
+      background-color: #00ffae;
+      color: #000;
+      padding: 10px;
+      width: 100%;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background-color: #00e09c;
+    }
+    .result {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #101010;
+      border: 1px solid #333;
+      border-radius: 6px;
+    }
+    .home-button {
+      display: inline-block;
+      background-color: #333;
+      color: #00ffae;
+      padding: 8px 16px;
+      border-radius: 6px;
+      text-decoration: none;
+      margin-bottom: 20px;
+      font-weight: bold;
+      transition: background 0.3s ease;
+    }
+    .home-button:hover {
+      background-color: #444;
+    }
+  </style>
+</head>
+<body>
+  <div class="panel">
+    <a class="home-button" href="index.html">Back to Home</a>
+    <h2>TP/SL ROI Paneli</h2>
+
+    <div class="row">
+      <label for="entry">Giriş Fiyatı ($)</label>
+      <input type="number" id="entry" placeholder="Örn: 111100">
+    </div>
+
+    <div class="row">
+      <label for="leverage">Kaldıraç (x)</label>
+      <input type="number" id="leverage" placeholder="Örn: 11">
+    </div>
+
+    <div class="row">
+      <label for="capital">Yatırılan Para ($)</label>
+      <input type="number" id="capital" placeholder="Örn: 1000">
+    </div>
+
+    <div class="row">
+      <label for="roi">TP ROI (%)</label>
+      <input type="number" id="roi" placeholder="Örn: 10">
+    </div>
+
+    <div class="row">
+      <label for="sl">SL ROI (%)</label>
+      <input type="number" id="sl" placeholder="Örn: -5">
+    </div>
+
+    <button class="btn" onclick="calculateTPSL()">Hesapla</button>
+
+    <div class="result" id="output" style="display:none;"></div>
+  </div>
+
+  <script>
+    function calculateTPSL() {
+      const entry = parseFloat(document.getElementById('entry').value);
+      const leverage = parseFloat(document.getElementById('leverage').value);
+      const capital = parseFloat(document.getElementById('capital').value);
+      const roi = parseFloat(document.getElementById('roi').value);
+      const sl = parseFloat(document.getElementById('sl').value);
+
+      if ([entry, leverage, capital, roi, sl].some(isNaN)) {
+        alert("Lütfen tüm alanları doldurun.");
+        return;
+      }
+
+      const positionSize = (capital * leverage) / entry;
+      const tpProfit = capital * (roi / 100);
+      const slLoss = capital * (Math.abs(sl) / 100);
+
+      const tpPrice = entry + (tpProfit / positionSize);
+      const slPrice = entry - (slLoss / positionSize);
+
+      const output = document.getElementById('output');
+      output.innerHTML = `
+        <strong>Pozisyon Miktarı:</strong> ${positionSize.toFixed(6)} BTC<br><br>
+        <strong>Take Profit Fiyatı:</strong> $${tpPrice.toFixed(2)}<br>
+        <strong>Beklenen Kar:</strong> $${tpProfit.toFixed(2)} (${roi}% ROI)<br><br>
+        <strong>Stop Loss Fiyatı:</strong> $${slPrice.toFixed(2)}<br>
+        <strong>Beklenen Zarar:</strong> -$${slLoss.toFixed(2)} (${sl}% ROI)
+      `;
+      output.style.display = "block";
+    }
+  </script>
+</body>
+</html>

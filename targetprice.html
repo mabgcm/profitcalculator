@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Kaldıraçlı Kar Hesaplayıcı</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #121212;
+      color: #f0f0f0;
+      padding: 30px;
+    }
+    .container {
+      max-width: 460px;
+      margin: auto;
+      background: #1e1e1e;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.6);
+    }
+    h2 {
+      text-align: center;
+      color: #00ffae;
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+      color: #ccc;
+    }
+    input, select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      background-color: #2a2a2a;
+      border: 1px solid #444;
+      color: #fff;
+      border-radius: 6px;
+    }
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 10px;
+      background-color: #00ffae;
+      color: #000;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #00e09c;
+    }
+    .result {
+      margin-top: 20px;
+      font-size: 16px;
+      background: #2a2a2a;
+      padding: 15px;
+      border-radius: 8px;
+      border: 1px solid #444;
+    }
+    .hidden {
+      display: none;
+    }
+    .home-button {
+      display: inline-block;
+      background-color: #333;
+      color: #00ffae;
+      padding: 8px 16px;
+      border-radius: 6px;
+      text-decoration: none;
+      margin-bottom: 20px;
+      font-weight: bold;
+      transition: background 0.3s ease;
+    }
+    .home-button:hover {
+      background-color: #444;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a class="home-button" href="index.html">Back to Home</a>
+    <h2>Kaldıraçlı Kar Hesaplayıcı</h2>
+
+    <label for="capital">Yatırılan Para ($):</label>
+    <input type="number" id="capital" placeholder="Örn: 1000">
+
+    <label for="leverage">Kaldıraç Oranı (x):</label>
+    <input type="number" id="leverage" placeholder="Örn: 10">
+
+    <label for="mode">Hesaplama Türü:</label>
+    <select id="mode" onchange="toggleMode()">
+      <option value="percentage">Fiyat Artışı (%)</option>
+      <option value="price">Giriş ve Hedef Fiyat</option>
+    </select>
+
+    <div id="percentageMode">
+      <label for="priceChange">Fiyat Artışı (%)</label>
+      <input type="number" id="priceChange" placeholder="Örn: 0.5">
+    </div>
+
+    <div id="priceMode" class="hidden">
+      <label for="entryPrice">Giriş Fiyatı ($)</label>
+      <input type="number" id="entryPrice" placeholder="Örn: 111000">
+      
+      <label for="targetPrice">Hedef Fiyat ($)</label>
+      <input type="number" id="targetPrice" placeholder="Örn: 112500">
+    </div>
+
+    <button onclick="calculateProfit()">Hesapla</button>
+
+    <div class="result hidden" id="result"></div>
+  </div>
+
+  <script>
+    function toggleMode() {
+      const mode = document.getElementById("mode").value;
+      document.getElementById("percentageMode").classList.toggle("hidden", mode !== "percentage");
+      document.getElementById("priceMode").classList.toggle("hidden", mode !== "price");
+    }
+
+    function calculateProfit() {
+      const capital = parseFloat(document.getElementById('capital').value);
+      const leverage = parseFloat(document.getElementById('leverage').value);
+      const mode = document.getElementById('mode').value;
+
+      if (isNaN(capital) || isNaN(leverage)) {
+        alert("Lütfen yatırım ve kaldıraç alanlarını doldurun.");
+        return;
+      }
+
+      let profit = 0;
+      let returnPercent = 0;
+
+      if (mode === "percentage") {
+        const priceChange = parseFloat(document.getElementById('priceChange').value);
+        if (isNaN(priceChange)) {
+          alert("Lütfen fiyat artış yüzdesi girin.");
+          return;
+        }
+        profit = capital * leverage * (priceChange / 100);
+        returnPercent = leverage * priceChange;
+      } else {
+        const entryPrice = parseFloat(document.getElementById('entryPrice').value);
+        const targetPrice = parseFloat(document.getElementById('targetPrice').value);
+        if (isNaN(entryPrice) || isNaN(targetPrice)) {
+          alert("Lütfen giriş ve hedef fiyatları girin.");
+          return;
+        }
+        const positionSize = (capital * leverage) / entryPrice;
+        const priceDiff = targetPrice - entryPrice;
+        profit = positionSize * priceDiff;
+        returnPercent = (profit / capital) * 100;
+      }
+
+      const resultBox = document.getElementById('result');
+      resultBox.innerHTML = `
+        <strong>Kar:</strong> $${profit.toFixed(2)}<br>
+        <strong>Getiri:</strong> %${returnPercent.toFixed(2)}
+      `;
+      resultBox.classList.remove("hidden");
+    }
+  </script>
+</body>
+</html>
